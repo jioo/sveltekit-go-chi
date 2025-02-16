@@ -1,4 +1,6 @@
 <script>
+    import { deserialize } from '$app/forms';
+
     const { data } = $props();
     const album = $state(data);
 

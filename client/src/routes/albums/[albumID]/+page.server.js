@@ -14,16 +14,12 @@ export const actions = {
 		const data = await request.formData();
         const albumID = +params.albumID;
 
-		const body = await api.put(`album/${albumID}`, {
+		const body = await api.put(`albums/${albumID}`, {
             title: data.get('title'),
             artist: data.get('artist'),
-            year: data.get('year')
+            price: parseFloat(data.get('price'))
 		});
 
-		if (body.errors) {
-			return fail(401, body);
-		}
-
-		redirect(307, '/');
+		return body;
 	}
 };
