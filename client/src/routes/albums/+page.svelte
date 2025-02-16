@@ -25,7 +25,7 @@
                     <td>{album.artist}</td>
                     <td>{album.price}</td>
                     <td>
-                        <a href="/{album.id}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="albums/{album.id}" class="btn btn-sm btn-primary">Edit</a>
                         <button class="btn btn-sm btn-error">Delete</button>
                     </td>
                 </tr>
