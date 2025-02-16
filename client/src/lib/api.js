@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-const base = 'https://localhost:8080/api';
+const base = 'http://localhost:8080/api';
 
 async function send({ method, path, data }) {
 	const opts = { method, headers: {} };
