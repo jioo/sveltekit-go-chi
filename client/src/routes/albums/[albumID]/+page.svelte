@@ -1,5 +1,6 @@
 <script>
     import { deserialize } from '$app/forms';
+	import { goto } from '$app/navigation';
 
     const { data } = $props();
     const album = $state(data);
@@ -17,7 +18,9 @@
 				body: formData
 			});
 			const result = deserialize(await response.text());
-            console.log(result)
+            if (result.type === 'success') {
+                goto('/albums');
+            }
 
 		} catch (error) {
 			console.error(error);
@@ -26,7 +29,7 @@
 </script>
 
 <div class="bg-base-300 p-6">
-    <h1 class="text-2xl font-bold">Edit Album</h1>
+    <h1 class="text-2xl font-bold">{album?.id ? 'Edit Album' : 'Create Album'}</h1>
     <div class="breadcrumbs mb-4 text-sm">
         <ul>
             <li><a class="link text-xs" href="/albums">Albums</a></li>
@@ -64,6 +67,6 @@
             />
         </fieldset>
 
-        <button class="btn btn-primary w-80 mt-4" onclick={handleUpdate}>Update</button>
+        <button class="btn btn-primary w-80 mt-4" onclick={handleUpdate}>{album?.id ? 'Update' : 'Save'}</button>
     </div>
 </div>
