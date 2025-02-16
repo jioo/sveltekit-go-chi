@@ -8,8 +8,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-func connect() (db *sql.DB, err error) {
-	// Capture connection properties.
+func Connect() (db *sql.DB, err error) {
 	cfg := mysql.Config{
 		User:                 os.Getenv("DB_USER"),
 		Passwd:               os.Getenv("DB_PASS"),
@@ -18,6 +17,7 @@ func connect() (db *sql.DB, err error) {
 		DBName:               os.Getenv("DB_NAME"),
 		AllowNativePasswords: true,
 	}
+
 	// Get a database handle.
 	db, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
