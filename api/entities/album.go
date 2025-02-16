@@ -29,7 +29,6 @@ func GetAlbums(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	defer rows.Close()
 
 	for rows.Next() {
 		var alb album
@@ -79,11 +78,11 @@ func AddAlbum(w http.ResponseWriter, r *http.Request) {
 	var newAlbum album
 
 	// Decode JSON request body
-	if err := json.NewDecoder(r.Body).Decode(&newAlbum); err != nil {
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newAlbum)
+	if err != nil {
 		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
-		return
 	}
-	defer r.Body.Close()
 
 	ctx := r.Context()
 	db, ok := ctx.Value("db").(*sql.DB)
@@ -115,11 +114,11 @@ func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	var album album
 
 	// Decode JSON request body
-	if err := json.NewDecoder(r.Body).Decode(&album); err != nil {
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&album)
+	if err != nil {
 		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
-		return
 	}
-	defer r.Body.Close()
 
 	ctx := r.Context()
 	db, ok := ctx.Value("db").(*sql.DB)

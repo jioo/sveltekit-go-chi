@@ -50,6 +50,9 @@ func dbContext(next http.Handler) http.Handler {
 			log.Fatal(err)
 		}
 
+		// close the connection after request
+		defer db.Close()
+
 		ctx := context.WithValue(r.Context(), "db", db)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
