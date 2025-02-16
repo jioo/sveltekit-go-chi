@@ -35,7 +35,7 @@ func main() {
 		r.Route("/{albumID}", func(r chi.Router) {
 			r.Get("/", entities.GetAlbumByID)
 			r.Put("/", entities.UpdateAlbum)
-			// r.Delete("/", entities.DeleteAlbum)
+			r.Delete("/", entities.DeleteAlbum)
 		})
 	})
 

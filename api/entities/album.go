@@ -148,3 +148,23 @@ func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(album)
 }
+
+func DeleteAlbum(w http.ResponseWriter, r *http.Request) {
+	albumID := chi.URLParam(r, "albumID")
+
+	ctx := r.Context()
+	db, ok := ctx.Value("db").(*sql.DB)
+	if !ok {
+		http.Error(w, "unable to get context", http.StatusInternalServerError)
+		return
+	}
+
+	_, err := db.Exec(
+		"DELETE FROM album WHERE ID = ?",
+		albumID,
+	)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error deleting album: %v, id: %v", err, albumID), http.StatusInternalServerError)
+		return
+	}
+}
