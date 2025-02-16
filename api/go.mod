@@ -1,4 +1,4 @@
-module api
+module github.com/jioo/sveltekit-go-chi/api
 
 go 1.24.0
 
