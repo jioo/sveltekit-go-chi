@@ -27,7 +27,7 @@ func main() {
 	r.Use(dbContext)
 
 	// setup routes
-	r.Route("/albums", func(r chi.Router) {
+	r.Route("/api/albums", func(r chi.Router) {
 		r.Get("/", entities.GetAlbums)
 		r.Post("/", entities.AddAlbum)
 
