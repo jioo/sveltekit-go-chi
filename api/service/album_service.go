@@ -1,4 +1,4 @@
-package entities
+package service
 
 import (
 	"database/sql"
@@ -7,17 +7,12 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
+	"github.com/jioo/sveltekit-go-chi/api/entity"
 )
 
-type album struct {
-	ID     string  `json:"id"`
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
-}
-
 func GetAlbums(w http.ResponseWriter, r *http.Request) {
-	var albums []album
+	var albums []entity.Album
 
 	ctx := r.Context()
 	db, ok := ctx.Value("db").(*sql.DB)
@@ -33,7 +28,7 @@ func GetAlbums(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for rows.Next() {
-		var alb album
+		var alb entity.Album
 		err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -47,7 +42,7 @@ func GetAlbums(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAlbumByID(w http.ResponseWriter, r *http.Request) {
-	var album album
+	var album entity.Album
 	albumID := chi.URLParam(r, "albumID")
 
 	ctx := r.Context()
@@ -74,7 +69,7 @@ func GetAlbumByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddAlbum(w http.ResponseWriter, r *http.Request) {
-	var newAlbum album
+	var newAlbum entity.Album
 
 	// Decode JSON request body
 	decoder := json.NewDecoder(r.Body)
@@ -114,7 +109,7 @@ func AddAlbum(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
-	var album album
+	var album entity.Album
 	albumID := chi.URLParam(r, "albumID")
 
 	// Decode JSON request body

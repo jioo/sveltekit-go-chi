@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jioo/sveltekit-go-chi/api/db"
-	"github.com/jioo/sveltekit-go-chi/api/entities"
+	"github.com/jioo/sveltekit-go-chi/api/service"
 
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -28,14 +28,14 @@ func main() {
 
 	// setup routes
 	r.Route("/api/albums", func(r chi.Router) {
-		r.Get("/", entities.GetAlbums)
-		r.Post("/", entities.AddAlbum)
+		r.Get("/", service.GetAlbums)
+		r.Post("/", service.AddAlbum)
 
 		// Subrouters:
 		r.Route("/{albumID}", func(r chi.Router) {
-			r.Get("/", entities.GetAlbumByID)
-			r.Put("/", entities.UpdateAlbum)
-			r.Delete("/", entities.DeleteAlbum)
+			r.Get("/", service.GetAlbumByID)
+			r.Put("/", service.UpdateAlbum)
+			r.Delete("/", service.DeleteAlbum)
 		})
 	})
 
