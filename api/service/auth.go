@@ -56,7 +56,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := CreateJWT(user.Username)
 	if err != nil {
-		http.Error(w, "Unable to create token", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("token error: %v", err), http.StatusBadRequest)
 		return
 	}
 
@@ -132,7 +132,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateJWT(username string) (string, error) {
-	secretKey := os.Getenv("JWT_KEY")
+	secretKey := []byte(os.Getenv("JWT_KEY"))
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
@@ -149,7 +149,7 @@ func CreateJWT(username string) (string, error) {
 }
 
 func VerifyJWT(tokenString string) error {
-	secretKey := os.Getenv("JWT_KEY")
+	secretKey := []byte(os.Getenv("JWT_KEY"))
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
