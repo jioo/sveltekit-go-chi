@@ -17,7 +17,51 @@ import (
 var validate = validator.New()
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	var form entity.Login
+	var user entity.User
 
+	// Decode JSON request body
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&form)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err := validate.Struct(form); err != nil {
+		http.Error(w, fmt.Sprintf("validation error: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	ctx := r.Context()
+	db, ok := ctx.Value("db").(*sql.DB)
+	if !ok {
+		http.Error(w, "unable to get context", http.StatusInternalServerError)
+		return
+	}
+
+	row := db.QueryRow("SELECT Username, Password FROM users WHERE username = ?", form.Username)
+	err = row.Scan(&user.Username, &user.Password)
+	if err != nil {
+		http.Error(w, "Invalid Username/Password", http.StatusBadRequest)
+		return
+	}
+
+	// Verify hased password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
+	if err != nil {
+		http.Error(w, "Invalid Username/Password", http.StatusBadRequest)
+		return
+	}
+
+	token, err := CreateJWT(user.Username)
+	if err != nil {
+		http.Error(w, "Unable to create token", http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(token)
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -57,10 +101,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "error hashing password", http.StatusInternalServerError)
+		http.Error(w, "unable to hash password", http.StatusInternalServerError)
 		return
 	}
 
@@ -88,7 +131,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func createJWT(username string) (string, error) {
+func CreateJWT(username string) (string, error) {
 	secretKey := os.Getenv("JWT_KEY")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
@@ -105,7 +148,7 @@ func createJWT(username string) (string, error) {
 	return tokenString, nil
 }
 
-func verifyJWT(tokenString string) error {
+func VerifyJWT(tokenString string) error {
 	secretKey := os.Getenv("JWT_KEY")
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
