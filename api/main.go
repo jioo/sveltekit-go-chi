@@ -39,6 +39,9 @@ func main() {
 		})
 	})
 
+	r.Post("/api/register", service.Register)
+	r.Post("/api/login", service.Login)
+
 	// start server
 	http.ListenAndServe(":8080", r)
 }
