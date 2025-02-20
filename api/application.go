@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -27,7 +28,10 @@ func main() {
 	// setup db connection
 	r.Use(dbContext)
 
-	// setup routes
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, World!")
+	})
+
 	r.Route("/api/albums", func(r chi.Router) {
 		r.Use(withAuth)
 		r.Get("/", service.GetAlbums)
@@ -45,7 +49,7 @@ func main() {
 	r.Post("/api/login", service.Login)
 
 	// start server
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":5000", r)
 }
 
 func dbContext(next http.Handler) http.Handler {
