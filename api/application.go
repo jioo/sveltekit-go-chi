@@ -31,6 +31,8 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, World!")
 	})
+	r.Post("/api/register", service.Register)
+	r.Post("/api/login", service.Login)
 
 	r.Route("/api/albums", func(r chi.Router) {
 		r.Use(withAuth)
@@ -44,9 +46,6 @@ func main() {
 			r.Delete("/", service.DeleteAlbum)
 		})
 	})
-
-	r.Post("/api/register", service.Register)
-	r.Post("/api/login", service.Login)
 
 	// start server
 	http.ListenAndServe(":5000", r)
