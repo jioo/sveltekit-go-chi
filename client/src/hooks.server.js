@@ -7,15 +7,16 @@ export function handle({ event, resolve }) {
 
 	try {
 		const token = event.cookies.get('jwt');
-		const user = jwt.verify(token, JWT_KEY);
-		event.locals.user = user;
-		event.locals.token = token;
+		if (token) {
+			const user = jwt.verify(token, JWT_KEY);
+			event.locals.user = user;
+			event.locals.token = token;
+		}
 
 	} catch (error) {
 		console.error(error);
 		event.cookies.set('jwt', '', { path: '/' });
-		
 	}
-	
+
 	return resolve(event);
 }

@@ -3,8 +3,13 @@ import * as api from '$lib/api';
 
 export async function load({ locals, cookies }) {
 	if (!locals.user) redirect(302, '/');
-    const albums = await api.get(`albums`, locals.token);
-    return { albums }
+    try {
+        const albums = await api.get(`albums`, locals.token);
+        return { albums }
+    } catch (err) {
+        console.log(err)
+        return error(err.status, err.message);
+    }
 }
 
 export const actions = {
