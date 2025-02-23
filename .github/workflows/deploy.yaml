@@ -16,7 +16,7 @@ jobs:
 
       - name: Setup variables and Generate deployment package
         run: |
-          echo "VERSION_LABEL=${{ github.sha }}-$(date +%s)" >> $GITHUB_ENV
+          echo "VERSION_LABEL=${{ github.sha }}-$(date +\%s)" >> $GITHUB_ENV
 
           cd api
           zip -r ../deploy.zip . -x '*.git*'
