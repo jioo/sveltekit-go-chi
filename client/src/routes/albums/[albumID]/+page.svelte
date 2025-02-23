@@ -25,6 +25,8 @@
                 return false;
             }
 
+            goto('/albums')
+
 		} catch (error) {
 			console.error(error);
 		}

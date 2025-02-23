@@ -26,7 +26,7 @@ export const actions = {
     
             // update existing album
             } else {
-                result = await api.put(`albums`, body, locals.token);
+                result = await api.put(`albums/${albumID}`, body, locals.token);
             }
         } catch (err) {
             error(err);

@@ -2,8 +2,8 @@
     import { deserialize } from '$app/forms';
 	import { goto } from '$app/navigation';
 	
-	let username = $state('');
-	let password = $state('');
+	let username = $state('jioo');
+	let password = $state('password');
 	let errors = $state([]);
 	
 	const handleLogin = async (e) => {
@@ -57,7 +57,6 @@
 						id="username"
 						bind:value={username}
 						class="input input-bordered"
-						required
 					/>
 				</div>
 				<div class="form-control">
@@ -69,11 +68,10 @@
 						id="password"
 						bind:value={password}
 						class="input input-bordered"
-						required
 					/>
 
                     <div class="mt-1">
-                        <a href="/" class="label-text-alt link link-hover">Don't have an account?</a>
+                        <a href="/register" class="label-text-alt link link-hover">Don't have an account?</a>
                     </div>
 				</div>
 				<div class="form-control mt-4">
