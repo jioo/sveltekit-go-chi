@@ -23,8 +23,7 @@
                 "close": false,
                 "clear": true,
                 "showReuseMessage": false
-            },
-            "isBackground": true
+            }
         },
         {
             "type": "shell",
@@ -47,13 +46,12 @@
                 "close": false,
                 "clear": true,
                 "showReuseMessage": false
-            },
-            "isBackground": true
+            }
         },
         {
             "label": "Run All",
             "dependsOn": ["go: run", "svelte: run"],
-            "dependsOrder": "sequence",
+            "dependsOrder": "parallel",
             "group": {
                 "kind": "build",
                 "isDefault": true
