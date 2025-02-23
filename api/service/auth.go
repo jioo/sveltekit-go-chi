@@ -43,20 +43,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	row := db.QueryRow("SELECT Username, Password FROM users WHERE username = ?", form.Username)
 	err = row.Scan(&user.Username, &user.Password)
 	if err != nil {
-		http.Error(w, "Invalid Username/Password", http.StatusBadRequest)
+		utils.CustomError(w, "Invalid Username/Password")
 		return
 	}
 
 	// Verify hased password
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(form.Password))
 	if err != nil {
-		http.Error(w, "Invalid Username/Password", http.StatusBadRequest)
+		utils.CustomError(w, "Invalid Username/Password")
 		return
 	}
 
 	token, err := CreateJWT(user.Username)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("token error: %v", err), http.StatusBadRequest)
+		utils.CustomError(w, fmt.Sprintf("token error: %v", err))
 		return
 	}
 
