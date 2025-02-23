@@ -14,9 +14,17 @@
             ],
             "problemMatcher": ["$go"],
             "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+                "kind": "build"
+            },
+            "presentation": {
+                "reveal": "always",
+                "group": "api-server",
+                "panel": "dedicated",
+                "close": false,
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "isBackground": true
         },
         {
             "type": "shell",
@@ -29,12 +37,18 @@
                 "run",
                 "dev"
             ],
-            "problemMatcher": ["$npm"],
+            "group": {
+                "kind": "build"
+            },
             "presentation": {
-                "panel": "new",
                 "reveal": "always",
-                "group": "svelte"
-            }
+                "group": "svelte",
+                "panel": "dedicated",
+                "close": false,
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "isBackground": true
         },
         {
             "label": "Run All",
