@@ -49,6 +49,7 @@ func main() {
 
 	// start server
 	http.ListenAndServe(":5000", r)
+	fmt.Println("Server running")
 }
 
 func dbContext(next http.Handler) http.Handler {

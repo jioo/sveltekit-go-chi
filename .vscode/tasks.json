@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "go: run",
+            "command": "cd",
+            "args": [
+                "${workspaceFolder}/api",
+                ";",
+                "go",
+                "run",
+                "."
+            ],
+            "problemMatcher": ["$go"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "svelte: run",
+            "command": "cd",
+            "args": [
+                "${workspaceFolder}/client",
+                ";",
+                "npm",
+                "run",
+                "dev"
+            ],
+            "problemMatcher": ["$npm"],
+            "presentation": {
+                "panel": "new",
+                "reveal": "always",
+                "group": "svelte"
+            }
+        },
+        {
+            "label": "Run All",
+            "dependsOn": ["go: run", "svelte: run"],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
