@@ -2,9 +2,10 @@
     import { deserialize } from '$app/forms';
 	import { goto } from '$app/navigation';
 	
-	let username = $state('jioo');
-	let password = $state('password');
-
+	let username = $state('');
+	let password = $state('');
+	let errors = $state([]);
+	
 	const handleLogin = async (e) => {
         e.preventDefault();
         
@@ -16,10 +17,15 @@
 				method: 'POST',
 				body: formData
 			});
+			
 			const result = deserialize(await response.text());
-            if (result.type === 'success') {
-                goto('/albums');
+            const { data } = result;
+            if (data.errors) {
+                errors = data.errors;
+                return false;
             }
+
+			goto('/albums');
 
 		} catch (error) {
 			console.error(error);
@@ -32,6 +38,16 @@
 	<div class="hero-content flex-col lg:flex-row-reverse">
 		<div class="card bg-base-300 w-full max-w-sm flex-shrink-0 shadow-2xl">
 			<div class="card-body">
+                {#if errors.length}
+                    <div role="alert" class="alert alert-error">
+                        <ul class="list-disc list-inside space-y-1">
+                            {#each errors as error}
+                                <li class="text-sm">{error.message}</li>
+                            {/each}
+                        </ul>
+                    </div>
+                {/if}
+
 				<div class="form-control">
 					<label class="label" for="username">
 						<span class="label-text">Username</span>
@@ -57,7 +73,7 @@
 					/>
 
                     <div class="mt-1">
-                        <a href="/register" class="label-text-alt link link-hover">Don't have an account?</a>
+                        <a href="/" class="label-text-alt link link-hover">Don't have an account?</a>
                     </div>
 				</div>
 				<div class="form-control mt-4">

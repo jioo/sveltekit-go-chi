@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import * as api from '$lib/api';
 
 export async function load({ locals, params }) {
@@ -11,33 +11,30 @@ export async function load({ locals, params }) {
 
 export const actions = {
 	save: async ({ request, locals, params }) => {
-		const data = await request.formData();
-        const albumID = +params.albumID;
         let result;
+		const form = await request.formData();
+        const albumID = +params.albumID;
+        const title = (form.get('title') !== 'undefined') ? form.get('title') : '';
+        const artist = (form.get('artist') !== 'undefined') ? form.get('artist') : '';
+        const price = (form.get('price') !== 'undefined') ? parseFloat(form.get('price')) : 0;
+        const body = { title, artist, price }
 
         try {
             // save new album
             if (!albumID) {
-                result = await api.post(`albums`, {
-                    title: data.get('title'),
-                    artist: data.get('artist'),
-                    price: parseFloat(data.get('price'))
-                }, locals.token);
+                result = await api.post(`albums`, body, locals.token);
     
             // update existing album
             } else {
-                result = await api.put(`albums/${albumID}`, {
-                    title: data.get('title'),
-                    artist: data.get('artist'),
-                    price: parseFloat(data.get('price'))
-                }, locals.token);
+                result = await api.put(`albums`, body, locals.token);
             }
-
         } catch (err) {
-            console.log(err)
-            return error(err.status, err.message);
+            error(err);
         }
         
-        return result;
+        if (result.errors) {
+            return fail(401, result);
+        }
+        return { success: true };
 	}
 };
