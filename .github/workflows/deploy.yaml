@@ -15,7 +15,7 @@ jobs:
 
       - name: Setup variables and Generate deployment package
         run: |
-          VERSION_LABEL="${{ github.sha }}-$(date +%s)"
+          echo "VERSION_LABEL=${{ github.sha }}-$(date +\%s)" >> $GITHUB_ENV
 
           cd api
           zip -r ../deploy.zip . -x '*.git*'
@@ -28,6 +28,6 @@ jobs:
             aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             application_name: golang
             environment_name: main
-            version_label: $VERSION_LABEL
+            version_label: ${{ env.VERSION_LABEL }}
             region: ap-southeast-1
             deployment_package: deploy.zip
