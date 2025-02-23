@@ -24,7 +24,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&form)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -73,7 +73,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&user)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -98,13 +98,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if userID != 0 {
-		http.Error(w, "Username already exists", http.StatusBadRequest)
+		utils.CustomError(w, "Username already exists")
 		return
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "unable to hash password", http.StatusInternalServerError)
+		http.Error(w, "Unable to hash password", http.StatusInternalServerError)
 		return
 	}
 

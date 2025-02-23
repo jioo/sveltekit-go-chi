@@ -78,7 +78,7 @@ func AddAlbum(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newAlbum)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -125,7 +125,7 @@ func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&album)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusInternalServerError)
 		return
 	}
 
