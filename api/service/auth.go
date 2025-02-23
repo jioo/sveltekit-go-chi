@@ -11,14 +11,14 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jioo/sveltekit-go-chi/api/entity"
+	"github.com/jioo/sveltekit-go-chi/api/utils"
 	"golang.org/x/crypto/bcrypt"
 )
-
-var validate = validator.New()
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var form entity.Login
 	var user entity.User
+	var validate = validator.New()
 
 	// Decode JSON request body
 	decoder := json.NewDecoder(r.Body)
@@ -29,7 +29,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := validate.Struct(form); err != nil {
-		http.Error(w, fmt.Sprintf("validation error: %v", err), http.StatusBadRequest)
+		utils.ListErrors(w, err)
 		return
 	}
 
@@ -67,6 +67,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func Register(w http.ResponseWriter, r *http.Request) {
 	var user entity.User
 	var userID int
+	var validate = validator.New()
 
 	// Decode JSON request body
 	decoder := json.NewDecoder(r.Body)
@@ -77,7 +78,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := validate.Struct(user); err != nil {
-		http.Error(w, fmt.Sprintf("validation error: %v", err), http.StatusBadRequest)
+		utils.ListErrors(w, err)
 		return
 	}
 

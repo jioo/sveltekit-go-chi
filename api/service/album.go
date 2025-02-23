@@ -7,8 +7,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator"
 
 	"github.com/jioo/sveltekit-go-chi/api/entity"
+	"github.com/jioo/sveltekit-go-chi/api/utils"
 )
 
 func GetAlbums(w http.ResponseWriter, r *http.Request) {
@@ -70,12 +72,18 @@ func GetAlbumByID(w http.ResponseWriter, r *http.Request) {
 
 func AddAlbum(w http.ResponseWriter, r *http.Request) {
 	var newAlbum entity.Album
+	var validate = validator.New()
 
 	// Decode JSON request body
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newAlbum)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err := validate.Struct(newAlbum); err != nil {
+		utils.ListErrors(w, err)
 		return
 	}
 
@@ -110,6 +118,7 @@ func AddAlbum(w http.ResponseWriter, r *http.Request) {
 
 func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	var album entity.Album
+	var validate = validator.New()
 	albumID := chi.URLParam(r, "albumID")
 
 	// Decode JSON request body
@@ -117,6 +126,11 @@ func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&album)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error decoding request body: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err := validate.Struct(album); err != nil {
+		utils.ListErrors(w, err)
 		return
 	}
 

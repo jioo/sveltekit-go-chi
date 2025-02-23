@@ -47,9 +47,15 @@ func main() {
 		})
 	})
 
-	// start server
-	http.ListenAndServe(":5000", r)
-	fmt.Println("Server running")
+	// Start server
+	srv := &http.Server{
+		Addr:    ":5000",
+		Handler: r,
+	}
+	log.Printf("Server starting on port 5000")
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Server failed to start: %v", err)
+	}
 }
 
 func dbContext(next http.Handler) http.Handler {
